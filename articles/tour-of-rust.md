@@ -1,9 +1,9 @@
 ---
-title: "Tour of Rust 第2章(基本制御フロー)まとめ"
+title: "Tour of Rust 第1章(基礎)まとめ"
 emoji: "🕌"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["rust"]
-published: false
+published: true
 ---
 
 ここでのまとめ

@@ -1,16 +1,16 @@
 ---
-title: "Tour of Rust 第2章(基本制御フロー)まとめ"
+title: "Tour of Rust 第3章(基本的なデータ構造体)まとめ"
 emoji: "🗂"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["rust"]
+topics: []
 published: false
 ---
 
 ここでのまとめ
 
 ```
-if/else if/else
-loop
+構造体
+メソッドの定義
 while
 for
 match
@@ -18,41 +18,33 @@ loop から値を返す
 ブロック式から値を返す
 ```
 
-## if/else if/else
+## 構造体
 
-・論理演算子が使える ==, !=, <, >, <=, >=, !, ||, &&
+・一つの struct はフィールドの集合
+・フィールドとは「データ構造」と「キーワードを紐づける」値
+・その値は、プリミティブ値かデータ構造を指定できる
+
+```
+struct SeaCreature {
+  animal_type: String,
+  name: String,
+  arms: i32,
+  legs: i32,
+  weapon: String,
+}
+```
+
+### メソッドの定義
+
+・関数と違い、メソッドは特定のデータ型と紐づく関数
+・static: ある型そのものに紐づく。演算子 :: で呼び出せる
+・instance: ある型のインスタンスに紐づく。演算子 . で呼び出せる
 
 ```
 fn main() {
-  let x = 42;
-  if x < 42 {
-    println!("42より小さい");
-  } else if x == 42 {
-    println!("42")
-  } else {
-    println!("42より大きい");
-  }
+  let s = String::from("hello world");
+  println!("{} is {} characters long.", s, s.len);
 }
-=> 42
-```
-
-### loop
-
-・break によってループから抜けれる
-
-```
-fn main() {
-  let mut x = 0;
-  loop {
-    x += 1;
-    if x == 42 {
-      break;
-    }
-  }
-  println!("{}", x);
-}
-
-=> 42
 ```
 
 ### while
