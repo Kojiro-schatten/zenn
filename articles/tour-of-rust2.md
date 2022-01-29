@@ -10,16 +10,12 @@ published: false
 
 ```
 if/else if/else
-シャドーイングとは
-変数の変更
-基本型の変換
-型について
-基本型の変換
-定数
-配列
-関数
-複数の戻り値
-空の戻り値
+loop
+while
+for
+match
+loop から値を返す
+ブロック式から値を返す
 ```
 
 ## if/else if/else
@@ -40,194 +36,142 @@ fn main() {
 => 42
 ```
 
-### シャドーイングとは
+### loop
 
-・同じ変数名に複数回割り当てられること。
+・break によってループから抜けれる
 
 ```
 fn main() {
-  let x = 13;
-  prinln!("{}", x);
-
-  // x の型を指定
-  let x: f64 = 3.14159;
-  println!("{}", x);
-
-  // 宣言の後で初期化: 基本使わない
-  let x;
-  x = 0;
+  let mut x = 0;
+  loop {
+    x += 1;
+    if x == 42 {
+      break;
+    }
+  }
   println!("{}", x);
 }
 
-=> 13 3.141659 0
+=> 42
 ```
 
-### 変数の変更
+### while
 
-Rust の変数の変更は、２種類に分類される。
-・mutable: read & write
-・immutable: readonly
-
-mutable にする場合、
-
-```
-let mut x = 42;
-```
-
-と、mut キーワードを使う
-
-## 型について
+・条件が false となればループは終了となる
 
 ```
 fn main() {
-  let x = 12; // デフォルトでは i32
-  let a = 12u8;
-  let b = 4.3; // デフォルトでは f64
-  let c = 4.3f32;
-  let bv = true;
-  let t = (13, false);
-  let sentence = "hello world!";
-  println!(
-    "{} {} {} {} {} {} {} {}",
-    x, a, b, c, bv, t.0, t.1, sentence
-  );
+  let mut x = 0;
+  while x != 32 {
+    x += 1;
+  }
+  println!("{}", x);
 }
-
-=> 12 12 4.3 4.3 true 13 false hello world!
+=> 32
 ```
 
-> u8, u32, u64, u128 => 符号なし整数型
-> i8, i32, i64, i128 => 符号付き整数型
-> f32, f64 => 浮動小数点数型
-> usize, isize => ポインタサイズ整数型（メモリ内のインデックスとサイズを表す）
-> 配列型（コンパイル時に長さが決まる同じ要素のコレクション）
-> スライス型（実行時に長さが決まる同じ要素のコレクション）
-> str(実行時に長さが決まるテキスト)
+## for
 
-### 基本型の変換
-
-・数値型を扱うとき、型を明示する必要がある。
-・例えば、u8, u32 を混ぜるとエラーになる。
-・as をつけることで、型変換ができる。
+・イテレータとして表 k される式を反復処理する
+・イテレータとは項目がなくなるまで「次の項目は何か」と質問することができるオブジェクト
+・Rust では整数のシーケンスを生成するイテレータを簡単に生成できる
+・ .. 演算子は、開始番号から終了番号-1 までの数値を生成するイテレータを作成する
+・ ..= 演算子は、開始番号から終了番号までの数値を生成するイテレータを作成する
 
 ```
 fn main() {
-    let a = 13u8;
-    let b = 7u32;
-    let c = a + b; // 本来は、a か b を型変換する必要あり。
-    println!("{}", c);
-
-    let t = true;
-    println!("{}", t as u8);
-}
-=> Compiling playground v0.0.1 (/playground)
-error[E0308]: mismatched types
- --> src/main.rs:4:17
-  |
-4 |     let c = a + b;
-  |                 ^ expected `u8`, found `u32`
-
-error[E0277]: cannot add `u32` to `u8`
- --> src/main.rs:4:15
-  |
-4 |     let c = a + b;
-  |               ^ no implementation for `u8 + u32`
-  |
-  = help: the trait `Add<u32>` is not implemented for `u8`
-
-Some errors have detailed explanations: E0277, E0308.
-For more information about an error, try `rustc --explain E0277`.
-error: could not compile `playground` due to 2 previous errors
-```
-
-なので、
-
-```
-let c = a as u32 + b;
-```
-
-と型変換すると、コンパイルが通る。
-
-## 定数
-
-・明示的な型指定が必要
-・大文字のスネークケースを使用する
-
-```
-const PI: f32 = 3.14159;
-fn main() {
-  println!(
-    "ゼロからApple {} を作るには、まず宇宙を想像すること",
-    PI
-  );
+  for x in 0..5 {
+    println!("{}", x);
+  }
+  for x in 0..=5 {
+    println!("{}", x);
+  }
 }
 
+=> 0 1 2 3 4
+=> 0 1 2 3 4 5
 ```
 
-## 配列
+### match
 
-・データ要素が全て同じ型の固定長コレクション
-・データ型は[T;N]となる。(T=要素の型、N=コンパイル時に決まる固定長)
+・value が取り得る条件全てにマッチさせて、true なら true 時の処理を走らせられる
 
 ```
 fn main() {
-  let nums: [i32; 3] = [1, 2, 3];
-  println!("{:?}", nums);
-  println!("{}", nums[1]);
+  let x = 42;
+  match x {
+    0 => {
+      println!("zero");
+    }
+    1 | 2 => {
+      println!("found 1 or 2");
+    }
+    //3 ~ 9
+    3..=9 => {
+      println!("found a number 3 to 9 inclusively");
+    }
+    matched_num @ 10..=100 => {
+      println!("found {} number between 10 to 100!", matched_num);
+    }
+    // default処理
+    _ => {
+      println!("found something else");
+    }
+  }
 }
-=> [1,2,3] 2
+=> found 42 number between 10 to 100!
 ```
 
-## 関数
+## loop から値を返す
 
-・0 個以上の引数がある
-・関数名にはスネークケース(snake_case)を使う
+・loop は break で抜けて値を返すことができる
 
 ```
-fn add(x: i32, y:i32) -> i32 {
-  return x + y;
+fn main() {
+  let mut x = 0;
+  let v = loop {
+    x += 1;
+    if x == 13 {
+      break "13 を発見";
+    }
+  };
+  println!("loop の戻り値: {}", v);
+}
+=> loop の戻り値: 13 を発見
+```
+
+## ブロック式から値を返す
+
+・if, match, 関数, ブロックは単一の方法で値を返せる
+・if, match, 関数, ブロックの最後が; のない式なら、戻り値として使用される
+・if 文は三項演算子のように使用できる
+
+```
+fn example() -> i32 {
+  let x = 42;
+  let v = if x > 42 { -1 } else { 1 }; // 三項演算子
+  println!("if より: {}", v);
+  let food = "ハンバーガー";
+  let result = match food {
+    "ホットドッグ" => "ホットドッグです",
+    _ => "ホットドッグではありません",
+  };
+  println!("食品の識別: {}", result);
+  let v = {
+    let a = 1;
+    let b = 2;
+    a + b
+  };
+  println!("ブロックより: {}", v);
+  // rust　で関数の最後から値を返す寛容的な方法
+  v + 4
 }
 fn main() {
-  println!("{}", add(42, 133));
+  println!("関数より: {}", example());
 }
-=> 175
-```
-
-## 複数の戻り値
-
-・関数は値をタプルで返すことで複数の値を返せる
-・タプルの要素はインデックス番号で参照可能
-
-```
-fn swap(x: i32, y:i32) -> (i32, i32) {
-  return (y, x);
-}
-fn main() {
-  let result = swap(123, 321);
-  println!("{} {}", result.0, result.1);
-  let (a, b) = swap(result.0, result.1);
-  println!("{} {}", a, b);
-}
-=> 321 123
-=> 123 321
-```
-
-## 空の戻り値
-
-・関数に戻り値の型が指定されていない場合、unit と呼ばれる空のタプルを返す
-・空のタプルは () と書く
-
-```
-fn make_nothing() -> () {
-  return ();
-}
-fn make_nothing2() {
-  // この関数は戻り値が指定されないため()を返す
-}
-fn main() {
-  let a = make_nothing()
-  let b = make_nothing2()
-  println!("aの値: {:?}", a);
-  println!("bの値: {:?}", b);
-}
+=>
+if より: 1
+食品の識別: ホットドッグではありません
+ブロックより: 3
+関数より: 7
 ```
