@@ -11,11 +11,11 @@ published: false
 ```
 構造体
 メソッドの定義
-while
-for
-match
-loop から値を返す
-ブロック式から値を返す
+メモリ
+メモリの中でデータを作成する
+タプルライクな構造体
+列挙型
+データを持つ列挙型
 ```
 
 ## 構造体
@@ -47,123 +47,185 @@ fn main() {
 }
 ```
 
-### while
+### メモリ
 
-・条件が false となればループは終了となる
+３つのメモリ空間がある
+
+・データメモリ：固定長もしくは static なデータ。プログラム内の文字列("hello world")など、
+文字列は読み取りにしか使えないため、データメモリ領域に入る。コンパイルはこういったデータに対して
+チューニングし、メモリ上の位置は既に知られていてかつ固定であるため、非常に早く使える
+
+・スタックメモリ：関数内で宣言された変数。関数が呼び出されている間は、メモリ上の位置は変更されることがないため、
+コンパイラからチューニングが出来る。結果、スタックメモリも非常に早くデータにアクセスできる
+
+・ヒープメモリ：プログラムの実行時に、作られるデータ。このメモリにあるデータは追加、移動、削除、サイズなどの
+操作が許される。動的だが、メモリの使い方に柔軟性を生み出せる。データをヒープメモリに入れることを「allocation」
+といい、データをヒープメモリから削除することを「deallocation」と言う。
+
+## メモリの中でデータを作成する
+
+・コードの中で構造体をインスタンス化する際、プログラムはフィールドデータをメモリ上で隣り合うように作成する
+・全フィールドの値を指定して、インスタンス化する場合
+構造体{...}.
+というように演算子 . で取り出せる
+・
 
 ```
-fn main() {
-  let mut x = 0;
-  while x != 32 {
-    x += 1;
-  }
-  println!("{}", x);
+structure SeaCreature {
+  animal_type: String,
+  name: String,
+  arms: i32,
+  legs: i32,
+  weapon: String,
 }
-=> 32
-```
 
-## for
-
-・イテレータとして表 k される式を反復処理する
-・イテレータとは項目がなくなるまで「次の項目は何か」と質問することができるオブジェクト
-・Rust では整数のシーケンスを生成するイテレータを簡単に生成できる
-・ .. 演算子は、開始番号から終了番号-1 までの数値を生成するイテレータを作成する
-・ ..= 演算子は、開始番号から終了番号までの数値を生成するイテレータを作成する
-
-```
 fn main() {
-  for x in 0..5 {
-    println!("{}", x);
-  }
-  for x in 0..=5 {
-    println!("{}", x);
-  }
-}
-
-=> 0 1 2 3 4
-=> 0 1 2 3 4 5
-```
-
-### match
-
-・value が取り得る条件全てにマッチさせて、true なら true 時の処理を走らせられる
-
-```
-fn main() {
-  let x = 42;
-  match x {
-    0 => {
-      println!("zero");
-    }
-    1 | 2 => {
-      println!("found 1 or 2");
-    }
-    //3 ~ 9
-    3..=9 => {
-      println!("found a number 3 to 9 inclusively");
-    }
-    matched_num @ 10..=100 => {
-      println!("found {} number between 10 to 100!", matched_num);
-    }
-    // default処理
-    _ => {
-      println!("found something else");
-    }
-  }
-}
-=> found 42 number between 10 to 100!
-```
-
-## loop から値を返す
-
-・loop は break で抜けて値を返すことができる
-
-```
-fn main() {
-  let mut x = 0;
-  let v = loop {
-    x += 1;
-    if x == 13 {
-      break "13 を発見";
-    }
+  // SeaCreature のデータはスタックに入る
+  let ferris = SeaCreature {
+    // String構造体もスタックに入りますが、ヒープに入るデータの参照アドレスが１つ
+    // ダブルクォーとで囲まれているテキスト＝読み取り専用データ＝データメモリに入る
+    // String::from と  SeaCreature のフィールドを隣り合う形でスタックに入れる
+    // フィールドの値は変更可能で、メモリ上では下記のように変更される
+    // 1: ヒープに変更可能なメモリを作る、テキストを入れる
+    // 2: 1で作成した参照アドレスをヒープに保存、それを String に保存
+    animal_type: String::from("crab"),
+    name: String::from("Ferris"),
+    arms: 2,
+    legs: 4,
+    weapon: String::from("claw"),
   };
-  println!("loop の戻り値: {}", v);
+  let sarah = SeaCreature {
+    animal_type: String::from("octopus"),
+    name: String::from("Sarah"),
+    arms: 8,
+    legs: 0,
+    weapon: String::from("none"),
+  }
+  println!(
+    "{} is a {}. They have {} arms, {} legs and {} weapon",
+    ferris.name, ferris.animal_type, ferris.arms, ferris.legs, ferris.weapon
+  );
+  println!(
+    "{} is a {}. They have {} arms, and {} legs. They have no weapon..",
+    sarah.name, sarah.animal_type, sarah.arms, sarah.legs, sarah.weapon
+  )
 }
-=> loop の戻り値: 13 を発見
 ```
 
-## ブロック式から値を返す
-
-・if, match, 関数, ブロックは単一の方法で値を返せる
-・if, match, 関数, ブロックの最後が; のない式なら、戻り値として使用される
-・if 文は三項演算子のように使用できる
+### タプルライクな構造体
 
 ```
-fn example() -> i32 {
-  let x = 42;
-  let v = if x > 42 { -1 } else { 1 }; // 三項演算子
-  println!("if より: {}", v);
-  let food = "ハンバーガー";
-  let result = match food {
-    "ホットドッグ" => "ホットドッグです",
-    _ => "ホットドッグではありません",
-  };
-  println!("食品の識別: {}", result);
-  let v = {
-    let a = 1;
-    let b = 2;
-    a + b
-  };
-  println!("ブロックより: {}", v);
-  // rust　で関数の最後から値を返す寛容的な方法
-  v + 4
+struct Location(i32, i32);
+fn main() {
+  let loc = Location(42, 32);
+  println!("{}, {}", loc.0, loc.1);
+}
+```
+
+## ユニットライクな構造体
+
+・フィールドを持たない構造体を宣言できる
+・unit は空ユニット() の別名称
+・あまり使われない
+
+```
+struct Marker;
+fn main() {
+  let _m = Marker;
+}
+```
+
+## 列挙型
+
+・キーワード enum で新しい（いくつかのタグ付けされた値を持てる）型が生成できる
+・match は保有する全ての列挙値を処理する手助けができる。
+
+```
+#![allow(dead_code)] // この行でコンパイラのwaringsメッセージを止めます。
+enum Species {
+  Crab,
+  Octopus,
+  Fish,
+  Clam
+}
+struct SeaCreature {
+  species: Species,
+  name: String,
+  arms: i32,
+  legs: i32,
+  weapong: String,
 }
 fn main() {
-  println!("関数より: {}", example());
+  let ferris = SeaCreature {
+    species: Species::Crab,
+    name: String::from("Ferris"),
+    arms: 2,
+    legs: 4,
+    weapong: String::from("claw"),
+  };
+  match ferris.species {
+    Species::Crab => println!("{} is a crab", ferris.name),
+    Species::Octopus => println!("{} is a octopus", ferris.name),
+    Species::Fish => println!("{} is a fish", ferris.name),
+    Species::Clam => println!("{} is a clam", ferris.name),
+  }
 }
-=>
-if より: 1
-食品の識別: ホットドッグではありません
-ブロックより: 3
-関数より: 7
+=> Ferris is a crab
+```
+
+## データを持つ列挙型
+
+・enum は一個もしくは複数な型のデータを持つことができ、C 言語の union のような表現ができる
+・match を用いて列挙値に対するパターンマッチングを行う際、かくデータを変数名に束縛することができる
+・列挙のメモリ事情
+・・列挙型のメモリサイズはそれが持つ最大要素のサイズと等しい
+・・・そのため、代替加入な同じサイズのメモリ空間を利用することができる
+・・要素の型以外に、各要素には数字値がついている
+・複数の型を組み合わせて新しい型を作ることができる（Rust が algebraic types(代数型) を持つと言われ理由）
+
+```
+#![allow(dead_code)] // この行でコンパイラのwaringsメッセージを止めます。
+enum Species { Crab, Octopus, Fish, Clam }
+enum PoisonType { Acidic, Painful ,Lethal }
+enum Size { Big, Small }
+enum Weapon {
+  Claw(i32, Size),
+  Poison(PoisonType),
+  None
+}
+
+struct SeaCreature {
+  species: Species,
+  name: String,
+  arms: i32,
+  legs: i32,
+  weapon: Weapon,
+}
+
+fn main() {
+  let ferris = SeaCreature {
+    species: Species::Crab,
+    name: String::from("Ferris"),
+    arms: 2,
+    legs: 4,
+    weapon: Weapon::Claw(2, Size::Small),
+  };
+  match ferris.species {
+    Species::Crab => {
+      match ferris.weapon {
+        Weapon::Claw(num_claws, size) => {
+          let size_description = match size {
+            Size::Big => "big",
+            Size::Small => "small"
+          };
+          println!("ferris is a crab with {} {} claws", num_claws, size_description)
+        },
+        _ => println!("ferris is a crab with some other weapong")
+      }
+    },
+    _ => println!("feris is some other animal"),
+  }
+}
+
+=> ferris is a crab with 2 small claws
 ```
