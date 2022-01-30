@@ -14,10 +14,9 @@ published: false
 ジェネリック型とは？
 値がないことの表現
 Option
-for
-match
-loop から値を返す
-ブロック式から値を返す
+Result
+失敗するかもしれないmain
+ベクタ型
 ```
 
 ## ジェネリック型とは？
@@ -49,38 +48,21 @@ fn main() {
 => 42 true 3.14 Boom!
 ```
 
-### Result
+## 値がないことの表現
 
-・ジェネリックな列挙型、失敗する可能性のある値を返す
-・カンマで区切られた複数のパラメータ化された型を持つ
+・Rust に null は無いが、１つ以上の値を None によって代替できる
 
-```
-enum Result<T, E> {
-    Ok(T),
-    Err(E),
+enum Item {
+Inventory(String),
+// None は項目が無いことを表す
+None,
 }
-```
 
-・Ok と Err を使えばどこでもインスタンスを生成
-
-```
-fn do_something_that_might_fail(i:i32) -> Result<f32, String> {
-  if i == 42 {
-    Ok(13.0)
-  } else {
-    Err(String::from("正しい値ではない"))
-  }
+struct BagOfHolding {
+item: Item,
 }
-fn main() {
-  let result = do_something_that_might_fail(12);
-  match result {
-    Ok(v) => println!("発見 {}", v),
-    Err(e) => println!("Error {}", e),
-  }
-}
-```
 
-### Option
+## Option
 
 ・Option はジェネリックな列挙型が組み込まれている
 ・null を使わず null 許容な値を表現できる
@@ -111,108 +93,140 @@ fn main() {
 
 ```
 
-## for
+## Result
 
-・イテレータとして表 k される式を反復処理する
-・イテレータとは項目がなくなるまで「次の項目は何か」と質問することができるオブジェクト
-・Rust では整数のシーケンスを生成するイテレータを簡単に生成できる
-・ .. 演算子は、開始番号から終了番号-1 までの数値を生成するイテレータを作成する
-・ ..= 演算子は、開始番号から終了番号までの数値を生成するイテレータを作成する
+・ジェネリックな列挙型、失敗する可能性のある値を返す
+・カンマで区切られた複数のパラメータ化された型を持つ
 
 ```
-fn main() {
-  for x in 0..5 {
-    println!("{}", x);
-  }
-  for x in 0..=5 {
-    println!("{}", x);
-  }
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
 }
-
-=> 0 1 2 3 4
-=> 0 1 2 3 4 5
 ```
 
-### match
-
-・value が取り得る条件全てにマッチさせて、true なら true 時の処理を走らせられる
+・Ok と Err を使えばどこでもインスタンスを生成
 
 ```
-fn main() {
-  let x = 42;
-  match x {
-    0 => {
-      println!("zero");
-    }
-    1 | 2 => {
-      println!("found 1 or 2");
-    }
-    //3 ~ 9
-    3..=9 => {
-      println!("found a number 3 to 9 inclusively");
-    }
-    matched_num @ 10..=100 => {
-      println!("found {} number between 10 to 100!", matched_num);
-    }
-    // default処理
-    _ => {
-      println!("found something else");
-    }
+fn do_something_that_might_fail(i:i32) -> Result<f32, String> {
+  if i == 42 {
+    Ok(13.0)
+  } else {
+    Err(String::from("正しい値ではない"))
   }
 }
-=> found 42 number between 10 to 100!
-```
-
-## loop から値を返す
-
-・loop は break で抜けて値を返すことができる
-
-```
 fn main() {
-  let mut x = 0;
-  let v = loop {
-    x += 1;
-    if x == 13 {
-      break "13 を発見";
+  let result = do_something_that_might_fail(12);
+  match result {
+    Ok(v) => println!("発見 {}", v),
+    Err(e) => println!("Error {}", e),
+  }
+}
+```
+
+## 失敗するかもしれない main
+
+・main は Result を返せる
+
+```
+fn do_something_that_might_fail(i: i32) -> Result<f32, String> {
+  if i == 42 {
+    Ok(13.0)
+  } else {
+    Err(String::from("正しい値では無い"))
+  }
+}
+fn main() -> Result<(), String> {
+  let result = do_something_that_might_fail(12);
+  match result {
+    Ok(v) => println!("発見 {}", v),
+    Err(_e) => {
+      //エラーをうまく処理
+      //何が起きたのかを説明する新しい Err を main から返す
+        return Err(String::from("main で何か問題が起きました!"));
     }
-  };
-  println!("loop の戻り値: {}", v);
+  }
+  // Result の Ok の中にある unit 値によって
+  // 全てが正常であることを表現していることに注意
+  Ok(())
 }
-=> loop の戻り値: 13 を発見
+=> main で何か問題が起きました!
 ```
 
-## ブロック式から値を返す
+## 簡潔なエラー処理
 
-・if, match, 関数, ブロックは単一の方法で値を返せる
-・if, match, 関数, ブロックの最後が; のない式なら、戻り値として使用される
-・if 文は三項演算子のように使用できる
+・Result はとてもよく使うため、Rust にはそれを扱うための ? 演算子が用意されている
 
 ```
-fn example() -> i32 {
-  let x = 42;
-  let v = if x > 42 { -1 } else { 1 }; // 三項演算子
-  println!("if より: {}", v);
-  let food = "ハンバーガー";
-  let result = match food {
-    "ホットドッグ" => "ホットドッグです",
-    _ => "ホットドッグではありません",
-  };
-  println!("食品の識別: {}", result);
-  let v = {
-    let a = 1;
-    let b = 2;
-    a + b
-  };
-  println!("ブロックより: {}", v);
-  // rust　で関数の最後から値を返す寛容的な方法
-  v + 4
+fn do_something_that_might_fail(i: i32) -> Result<f32, String> {
+  if i == 42 {
+    Ok(13.0)
+  } else {
+    Err(String::from("正しい値では無い"))
+  }
 }
+fn main() -> Result<(), String> {
+  let v = do_something_that_might_fail(42)?;
+  println!("発見 {}", v);
+  Ok(())
+}
+=> 発見 13
+```
+
+## やっつけな Option/Result 処理
+
+・Option, Result の両方には unwrap と呼ばれる関数がある。
+・unwrap とは、
+１：Option / Result 内の値を取得する
+２：列挙型が None / Err の場合、panic! する
+
+```
+fn do_something_that_might_fail(i: i32) -> Result<f32, String> {
+  if i == 42 {
+    Ok(13.0)
+  } else {
+    Err(String::from("正しい値ではない"))
+  }
+}
+fn main() -> Result<(), String> {
+  let v = do_something_that_might_fail(42).unwrap();
+  println!("発見 {}", v);
+  let v = do_something_that_might_fail(1).unwrap();
+  println!("発見 {}", v);
+  Ok(())
+}
+
+```
+
+良い Rust 使いであるためには、可能な限り適切に match を使用すること
+
+## ベクタ型
+
+・最も重要なジェネリック型のいくつかはコレクション型である
+・ベクタは構造体 Vec で表される可変サイズのリストである
+・マクロ vec! を使うと簡単にベクタを生成できる
+・Vec には iter() メソッドがあり、簡単に for ループに入れられる
+
+メモリに関する詳細
+・Vec は構造体だが、内部的にはヒープ上の固定リストへの参照を含む
+・ベクタはデフォルトの容量で始まる。容量よりも多くの項目が追加された時、ヒープ上により大きな容量の固定リストを生成して、データを再割り当てする
+
+```
 fn main() {
-  println!("関数より: {}", example());
+  let mut i32_vec = Vec::<i32>::new();
+  i32_vec.push(1);
+  i32_vec.push(2);
+  i32_vec.push(3);
+
+  // もっと賢く、型を自動的に推論
+  let mut float_vec = Vec::new();
+  float_vec.push(1.3);
+  float_vec.push(2.3);
+  float_vec.push(2.4);
+
+  let string_vec = vec![String::from("Hello"), String::from("World")];
+  for word in string_vec.iter() {
+    println!("{}", word);
+  }
 }
-=>
-if より: 1
-食品の識別: ホットドッグではありません
-ブロックより: 3
-関数より: 7
 ```
