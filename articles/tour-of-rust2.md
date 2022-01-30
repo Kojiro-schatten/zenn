@@ -3,7 +3,7 @@ title: "Tour of Rust 第2章(基本制御フロー)まとめ"
 emoji: "🗂"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["rust"]
-published: false
+published: true
 ---
 
 ここでのまとめ

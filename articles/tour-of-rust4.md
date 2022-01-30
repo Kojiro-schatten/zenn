@@ -49,61 +49,66 @@ fn main() {
 => 42 true 3.14 Boom!
 ```
 
-### 値がないことの表現
+### Result
 
-・Rust に null は無い
-・代わりに、1 つ以上の値を None によって代替する
-・
+・ジェネリックな列挙型、失敗する可能性のある値を返す
+・カンマで区切られた複数のパラメータ化された型を持つ
 
 ```
-enum Item {
-  Inventory(String),
-  None, // 項目が無いことを表す
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
 }
-struct BagOfHolding {
-  item: Item,
-}
-=>
-   Compiling playground v0.0.1 (/playground)
-warning: enum is never used: `Item`
- --> src/lib.rs:1:6
-  |
-1 | enum Item {
-  |      ^^^^
-  |
-  = note: `#[warn(dead_code)]` on by default
-
-warning: struct is never constructed: `BagOfHolding`
- --> src/lib.rs:7:8
-  |
-7 | struct BagOfHolding {
-  |        ^^^^^^^^^^^^
-
-warning: `playground` (lib) generated 2 warnings
-    Finished dev [unoptimized + debuginfo] target(s) in 4.20s
-Warnings
-No main function was detected, so your code was compiled
-but not run. If you’d like to execute your code, please
-add a main function.
 ```
 
-エラーは吐かず、warning になる。
+・Ok と Err を使えばどこでもインスタンスを生成
+
+```
+fn do_something_that_might_fail(i:i32) -> Result<f32, String> {
+  if i == 42 {
+    Ok(13.0)
+  } else {
+    Err(String::from("正しい値ではない"))
+  }
+}
+fn main() {
+  let result = do_something_that_might_fail(12);
+  match result {
+    Ok(v) => println!("発見 {}", v),
+    Err(e) => println!("Error {}", e),
+  }
+}
+```
 
 ### Option
 
-・Option とはジェネリックな列挙型が組み込まれている
+・Option はジェネリックな列挙型が組み込まれている
 ・null を使わず null 許容な値を表現できる
 ・Some と None を使うとどこでもインスタンスを生成できる
 
 ```
-fn main() {
-  let mut x = 0;
-  while x != 32 {
-    x += 1;
-  }
-  println!("{}", x);
+struct BagOfHolding<T> {
+  item: Option<T>,
 }
-=> 32
+fn main() {
+  let i32_bag = BagOfHolding::<i32> { item: None };
+  if i32_bag.item.is_none() {
+    println!("バッグには何もない")
+  } else {
+    println!("バッグには何かある")
+  }
+  let i32_bag = BagOfHolding::<i32> { item: Some(42) };
+  if i32_bag.item.is_some() {
+    println!("何かある")
+  } else {
+    println!("何もない")
+  }
+  match i32_bag.item {
+    Some(v) => println!("バッグに {} を発見", v),
+    None => println!("何もなかった")
+  }
+}
+
 ```
 
 ## for
