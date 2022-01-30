@@ -149,36 +149,7 @@ fn main() {
 ・match は保有する全ての列挙値を処理する手助けができる。
 
 ```
-#![allow(dead_code)] // この行でコンパイラのwaringsメッセージを止めます。
-enum Species {
-  Crab,
-  Octopus,
-  Fish,
-  Clam
-}
-struct SeaCreature {
-  species: Species,
-  name: String,
-  arms: i32,
-  legs: i32,
-  weapong: String,
-}
-fn main() {
-  let ferris = SeaCreature {
-    species: Species::Crab,
-    name: String::from("Ferris"),
-    arms: 2,
-    legs: 4,
-    weapong: String::from("claw"),
-  };
-  match ferris.species {
-    Species::Crab => println!("{} is a crab", ferris.name),
-    Species::Octopus => println!("{} is a octopus", ferris.name),
-    Species::Fish => println!("{} is a fish", ferris.name),
-    Species::Clam => println!("{} is a clam", ferris.name),
-  }
-}
-=> Ferris is a crab
+
 ```
 
 ## 参照外し
