@@ -2,7 +2,7 @@
 title: "Tour of Rust 第3章(基本的なデータ構造体)まとめ"
 emoji: "🗂"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: []
+topics: ["rust"]
 published: false
 ---
 
