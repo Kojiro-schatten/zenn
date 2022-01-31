@@ -36,7 +36,7 @@ fn main() {
 => 42
 ```
 
-### loop
+## loop
 
 ・break によってループから抜けれる
 
@@ -55,7 +55,7 @@ fn main() {
 => 42
 ```
 
-### while
+## while
 
 ・条件が false となればループは終了となる
 
@@ -92,7 +92,7 @@ fn main() {
 => 0 1 2 3 4 5
 ```
 
-### match
+## match
 
 ・value が取り得る条件全てにマッチさせて、true なら true 時の処理を走らせられる
 
