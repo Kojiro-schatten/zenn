@@ -3,7 +3,7 @@ title: "Tour of Rust 第3章(基本的なデータ構造体)まとめ"
 emoji: "🗂"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["rust"]
-published: false
+published: true
 ---
 
 ここでのまとめ
@@ -34,7 +34,7 @@ struct SeaCreature {
 }
 ```
 
-### メソッドの定義
+## メソッドの定義
 
 ・関数と違い、メソッドは特定のデータ型と紐づく関数
 ・static: ある型そのものに紐づく。演算子 :: で呼び出せる
@@ -47,7 +47,7 @@ fn main() {
 }
 ```
 
-### メモリ
+## メモリ
 
 ３つのメモリ空間がある
 
@@ -112,7 +112,7 @@ fn main() {
 }
 ```
 
-### タプルライクな構造体
+## タプルライクな構造体
 
 ```
 struct Location(i32, i32);
