@@ -28,122 +28,129 @@ published: false
 
 ## 所有権
 
-・一つの struct はフィールドの集合
-・フィールドとは「データ構造」と「キーワードを紐づける」値
-・その値は、プリミティブ値かデータ構造を指定できる
+・型のインスタンスを作成して変数に束縛するとメモリリソースが作成される
+・その全てのライフタイムに渡って Rust コンパイラが検証
+・束縛された変数はリソースの所有者と呼ばれる
 
 ```
-struct SeaCreature {
-  animal_type: String,
-  name: String,
-  arms: i32,
-  legs: i32,
-  weapon: String,
+struct Foo {
+  x: i32,
+}
+fn main() {
+  // 構造体をインスタンス化し、変数に束縛してメモリリソース作成
+  let foo = Foo { x: 42 };
+  // foo = リソースの所有者
 }
 ```
 
 ### スコープベースのリソース管理
 
-・関数と違い、メソッドは特定のデータ型と紐づく関数
-・static: ある型そのものに紐づく。演算子 :: で呼び出せる
-・instance: ある型のインスタンスに紐づく。演算子 . で呼び出せる
+・Rust では、スコープの終わりをリソースのデストラクトと開放の場所として使用する
+・このデストラクトと解放のことを drop と呼ぶ。
+・Rust には GC(ガベージコレクション)がない
 
 ```
-fn main() {
-  let s = String::from("hello world");
-  println!("{} is {} characters long.", s, s.len);
+struct Foo {
+  x: i32,
 }
+fn main() {
+  let foo_a = Foo { x: 42 };
+  let foo_b = Foo { x: 13};
+  println!("{}", foo_a.x);
+  println!("{}", foo_b.x);
+  // foo_b はここでドロップ
+  // foo_a はここでドロップ
+}
+=> 42
 ```
 
 ### ドロップは階層的
 
-３つのメモリ空間がある
+・構造体がドロップされると、まず構造体自体がドロップされ、次にその子要素が個別に削除される
+・メモリを自動的に解放することで、メモリリークを軽減できる
+・メモリリソースのドロップは一度しかできない
 
-・データメモリ：固定長もしくは static なデータ。プログラム内の文字列("hello world")など、
-文字列は読み取りにしか使えないため、データメモリ領域に入る。コンパイルはこういったデータに対して
-チューニングし、メモリ上の位置は既に知られていてかつ固定であるため、非常に早く使える
-
-・スタックメモリ：関数内で宣言された変数。関数が呼び出されている間は、メモリ上の位置は変更されることがないため、
-コンパイラからチューニングが出来る。結果、スタックメモリも非常に早くデータにアクセスできる
-
-・ヒープメモリ：プログラムの実行時に、作られるデータ。このメモリにあるデータは追加、移動、削除、サイズなどの
-操作が許される。動的だが、メモリの使い方に柔軟性を生み出せる。データをヒープメモリに入れることを「allocation」
-といい、データをヒープメモリから削除することを「deallocation」と言う。
+```
+struct Bar {
+  x: i32,
+}
+struct Foo {
+  bar: Bar,
+}
+fn main() {
+  let foo = Foo { bar: Bar { x; 42 } };
+  println!("{}", foo.bar.x);
+  // foo が最初にドロップ
+  // 次に foo.bar がドロップ
+}
+=> 42
+```
 
 ## 所有権の移動
 
-・コードの中で構造体をインスタンス化する際、プログラムはフィールドデータをメモリ上で隣り合うように作成する
-・全フィールドの値を指定して、インスタンス化する場合
-構造体{...}.
-というように演算子 . で取り出せる
-・
+・所有者が関数の実引数として渡されると、所有権は関数の仮引数に移動する
+・移動後、元の関数内の変数は使用できない
+・移動している間、所有者の値のスタックメモリは、関数呼び出しパラメータのスタックメモリにコピーされる
+・実引数として渡される →
+移動中は、スタックメモリは関数呼び出しがわのパラメータのスタックメモリに一旦コピー →
+・移動し終わったら、元の関数内の変数は使用できない（所有権の移動）
 
 ```
-structure SeaCreature {
-  animal_type: String,
-  name: String,
-  arms: i32,
-  legs: i32,
-  weapon: String,
+struct Foo {
+  x: i32,
+}
+
+fn do_something(f: Foo) {
+  println!("{}", f.x);
+  // f はここでドロップ
 }
 
 fn main() {
-  // SeaCreature のデータはスタックに入る
-  let ferris = SeaCreature {
-    // String構造体もスタックに入りますが、ヒープに入るデータの参照アドレスが１つ
-    // ダブルクォーとで囲まれているテキスト＝読み取り専用データ＝データメモリに入る
-    // String::from と  SeaCreature のフィールドを隣り合う形でスタックに入れる
-    // フィールドの値は変更可能で、メモリ上では下記のように変更される
-    // 1: ヒープに変更可能なメモリを作る、テキストを入れる
-    // 2: 1で作成した参照アドレスをヒープに保存、それを String に保存
-    animal_type: String::from("crab"),
-    name: String::from("Ferris"),
-    arms: 2,
-    legs: 4,
-    weapon: String::from("claw"),
-  };
-  let sarah = SeaCreature {
-    animal_type: String::from("octopus"),
-    name: String::from("Sarah"),
-    arms: 8,
-    legs: 0,
-    weapon: String::from("none"),
-  }
-  println!(
-    "{} is a {}. They have {} arms, {} legs and {} weapon",
-    ferris.name, ferris.animal_type, ferris.arms, ferris.legs, ferris.weapon
-  );
-  println!(
-    "{} is a {}. They have {} arms, and {} legs. They have no weapon..",
-    sarah.name, sarah.animal_type, sarah.arms, sarah.legs, sarah.weapon
-  )
+  let foo = Foo { x: 42 };
+  // foo の所有権は　do_something に移動
+  do_something(foo);
+  // foo は使えなくなる
 }
 ```
 
 ### 所有権を返す
 
+・所有権を関数から返すこともできる
+
 ```
-struct Location(i32, i32);
+struct Foo {
+  x: i32,
+}
+fn do_something() -> Foo {
+  Foo { x: 42 }
+  // 所有権は外に移動
+}
 fn main() {
-  let loc = Location(42, 32);
-  println!("{}, {}", loc.0, loc.1);
+  let foo = do_something();
+  // foo は所有者になる
+  // 関数はスコープの終端により、foo はドロップ
 }
 ```
 
 ## 参照による所有権の借用
 
-・フィールドを持たない構造体を宣言できる
-・unit は空ユニット() の別名称
-・あまり使われない
+・参照は & 演算子を使ってリソースへのアクセスを借用できる
+・参照も他のリソース同様にドロップされる
 
 ```
-struct Marker;
+struct Foo {
+  x: i32,
+}
 fn main() {
-  let _m = Marker;
+  let foo = Foo { x: 42 };
+  let f = &foo;
+  println!("{}", f.x);
+  // f はここでドロップ
+  // foo はここでドロップ
 }
 ```
 
-## 参照による所有権の可変な借用
+##
 
 ・キーワード enum で新しい（いくつかのタグ付けされた値を持てる）型が生成できる
 ・match は保有する全ての列挙値を処理する手助けができる。
@@ -152,7 +159,7 @@ fn main() {
 
 ```
 
-## 参照外し
+##
 
 ・enum は一個もしくは複数な型のデータを持つことができ、C 言語の union のような表現ができる
 
@@ -162,7 +169,7 @@ fn main() {
 
 ```
 
-## 借用したデータの受け渡し
+##
 
 ・enum は一個もしくは複数な型のデータを持つことができ、C 言語の union のような表現ができる
 
