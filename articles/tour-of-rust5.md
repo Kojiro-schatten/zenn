@@ -228,17 +228,31 @@ fn main() {
   do_something(&mut foo);
   // foo はここでドロップ
 }
-=>
+
 ```
 
 ## 参照の参照
 
-・enum は一個もしくは複数な型のデータを持つことができ、C 言語の union のような表現ができる
-
-・複数の型を組み合わせて新しい型を作ることができる（Rust が algebraic types(代数型) を持つと言われ理由）
+・参照の一部を参照することができる
 
 ```
-
+struct Foo {
+  x: i32,
+}
+fn do_something(a: &Foo) -> &i32 {
+  return &a.x;
+}
+fn main() {
+  let mut foo = Foo { x: 42 };
+  let x = &mut foo.x;
+  *x = 13;
+  // x はここでドロップされるため、普遍な参照が作成可能
+  let y = do_something(&foo);
+  println!("{}", y);
+  // y はここでドロップ
+  // foo はここでドロップ
+}
+=> 13
 ```
 
 ## 明示的なライフタイム
