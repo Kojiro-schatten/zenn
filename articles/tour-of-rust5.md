@@ -3,7 +3,7 @@ title: "Tour of Rust 第5章(データの所有権と借用)まとめ"
 emoji: "🐥"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["rust"]
-published: false
+published: true
 ---
 
 ここでのまとめ
