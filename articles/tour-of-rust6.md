@@ -3,7 +3,7 @@ title: "Tour of Rust 第6章(テキスト)まとめ"
 emoji: "😽"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["rust"]
-published: false
+published: true
 ---
 
 ここでのまとめ
