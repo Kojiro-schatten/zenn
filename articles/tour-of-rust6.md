@@ -98,7 +98,7 @@ fn main() {
 
 ## 生文字列リテラル
 
-・ str = r#" ... "# とすることで、文字列が全部表示される。
+・ str = r#" ... "# とすることで、文字列が全部表示される
 
 ```
 fn main() {
@@ -124,7 +124,7 @@ let hello_html = include_str!("hello.html");
 
 ## 文字列スライス
 
-・常に有効な utf-8 でなければならないメモリないのバイト列への参照。
+・常に有効な utf-8 でなければならないメモリないのバイト列への参照
 ・文字列のスライス（サブスライス）である str のスライスも有効な utf-8 でなければならない。
 ・&str の一般的なメソッド: len, starts_with, ends_with, is_empty, find
 
@@ -194,24 +194,45 @@ GOODBYE!!!
 
 ## 文字列の構築
 
-・
+・concat と join が使える
 
 ```
-
+fn main() {
+  let helloworld = ["hello", " ", "world!", "!"].concat();
+  let abc = ["a", "b", "c"].join(",");
+  println!("{}", helloworld);
+  println!("{}", abc);
+}
+=> hello world!!
+a,b,c
 ```
 
 ## 文字列のフォーマット
 
-・
+・format! マクロを使うと、パラメータ化された文字列を定義して文字列を作成することができる
+・値をどこにどのように配置すべきかはプレースホルダ({})で指定する
+・format! は println! と同じパラメータ付きの文字列を使用する
 
 ```
-
+fn main() {
+  let a = 42;
+  let f = format!("secret to life: {}", a);
+  println!("{}", f);
+}
+=> secret to life: 42
 ```
 
 ## 文字列変換
 
-・
+・to_string を使うと、文字列変換することができる
+・ジェネリック関数 parse を用いることで文字列や、文字列リテラルを型付きの値に変換できる。失敗したら Result が返る
 
 ```
-
+fn main() -> Result<(), std::num::ParseIntError> {
+  let a = 42;
+  let a_string = a.to_string();
+  let b = a_string.parse::<i32>()?;
+  println!("{} {}", a, b);
+  Ok(())
+}
 ```
