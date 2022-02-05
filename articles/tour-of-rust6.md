@@ -68,18 +68,10 @@ fn main() {
   let a: &'static str = "Ferris は言う: \t\" こんにちは\"";
   println!("{}", a);
 }
-
+=> Ferris は言う:  こんにちは
 ```
 
-## 複数行の文字列リテラル
-
-・
-
-```
-
-```
-
-### 生文字列リテラル
+### 複数行の文字列リテラル
 
 ・文字列はデフォルトで複数行に対応している
 ・改行したくない場合、行の末尾に \
@@ -96,46 +88,108 @@ fn main() {
   println!("こんにちは \
   世界");
 }
+=> あ
+   い
+   う
+   え
+   お
+   こんにちは 世界
+```
+
+## 生文字列リテラル
+
+・ str = r#" ... "# とすることで、文字列が全部表示される。
+
+```
+fn main() {
+  let a: &'static str = r#"
+    <div class="advice">
+      生文字列は役立つ
+    </div>
+    "#;
+    println!("{}", a);
+}
+=>  <div class="advice">
+      生文字列は役立つ
+    </div>
 ```
 
 ## ファイルから文字列リテラルを読み込む
 
-・
+・大きいテキストは、include_str! マクロを使ってローカルのファイルのテキストをプログラムの中で include する
 
 ```
-
+let hello_html = include_str!("hello.html");
 ```
 
 ## 文字列スライス
 
-・
+・常に有効な utf-8 でなければならないメモリないのバイト列への参照。
+・文字列のスライス（サブスライス）である str のスライスも有効な utf-8 でなければならない。
+・&str の一般的なメソッド: len, starts_with, ends_with, is_empty, find
 
 ```
-
+fn main() {
+  let a = "hi 🦀";
+  println!("{}", a.len());
+  let first_word = &a[0..2];
+  let second_word = &a[3..7];
+  println!("{} {}", first_word, second_word);
+}
+=> 7
+hi 🦀
 ```
 
 ## Chars
 
-・
+・Unicode での作業が非常に困難なため、utf-8 バイトのシーケンスを char 型の文字のベクトルとして取得する方法が提供されている
+・char` は常に 4 バイトの長さ
 
 ```
-
+fn main() {
+  // 文字をcharのベクトルとして集める
+  let chars = "hi 🦀.chars().collect::<Vec<char>>();
+  println!("{}", chars.len()); //should be 4
+  // chars は ４バイトなのでu32に変換可能
+  println!("{}", chars[3] as u32);
+}
+=> 4
+129408
 ```
 
 ## String
 
-・
+・String はヒープに utf-8 バイト列をもつ構造体
+・そのメモリはヒープ上にあるため、文字列リテラルではできないような、拡張/修正などが可能
+・共通メソッド: push_str, replace, to_lowercase / to_uppercase, trim
+・String がドロップされると、そのヒープ内のメモリもドロップされる
 
 ```
-
+fn main() {
+  let mut helloworld = String::from("hello");
+  helloworld.push_str(" world");
+  helloworld = helloworld + "!";
+  println!("{}", helloworld);
+}
+=> hello world!
 ```
 
 ## 関数パラメータとしてのテキスト
 
-・
+・文字列リテラル、文字列は、一般的に文字列スライスとして関数に渡される
+・それにより、所有権を渡す必要がないほとんどの場合で柔軟性が増す
 
 ```
-
+fn say_it_loud(msg:&str) {
+  println!("{}!!!", msg.to_string().to_uppercase());
+}
+fn main() {
+  // say_it_loud は &'static str を &str として借用することができる
+  say_it_loud("hello");
+  say_it_loud(&String::from("goodbye"));
+}
+=> HELLO!!!
+GOODBYE!!!
 ```
 
 ## 文字列の構築
