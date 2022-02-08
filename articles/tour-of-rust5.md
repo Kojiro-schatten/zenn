@@ -55,7 +55,7 @@ struct Foo {
 }
 fn main() {
   let foo_a = Foo { x: 42 };
-  let foo_b = Foo { x: 13};
+  let foo_b = Foo { x: 13 };
   println!("{}", foo_a.x);
   println!("{}", foo_b.x);
   // foo_b はここでドロップ
@@ -78,7 +78,7 @@ struct Foo {
   bar: Bar,
 }
 fn main() {
-  let foo = Foo { bar: Bar { x; 42 } };
+  let foo = Foo { bar: Bar { x: 42 } };
   println!("{}", foo.bar.x);
   // foo が最初にドロップ
   // 次に foo.bar がドロップ
