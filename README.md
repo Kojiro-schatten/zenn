@@ -5,6 +5,9 @@
 # 知っておきたいコマンド
 
 ```
+$ npm install zenn-cli@latest
+zenn cli の最新化
+
 $ npx zenn new:article --slug what-is-slug
 # => articles/what-is-slug.md`が作成される
 ```
