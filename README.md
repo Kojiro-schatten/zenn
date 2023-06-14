@@ -5,6 +5,8 @@
 # 知っておきたいコマンド
 
 ```
+$ npx zenn で開始
+
 $ npm install zenn-cli@latest
 zenn cli の最新化
 
