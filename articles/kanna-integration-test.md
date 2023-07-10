@@ -97,7 +97,7 @@ KANNA では E2E に [MagicPod](https://magicpod.com/)、 CSSスタイリング�
 
 この動画は実際にテストを書いた時の Interactions(右側) の表示と、言語別で動いていることの確認です。
 
-![integrationResult.gif](/images/kanna-integration-test/integrationResult.gif)
+![](/images/kanna-integration-test/integrationMov.gif)
 
 `npm run test-storybook` 実行時のテスト結果です。
 
