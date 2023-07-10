@@ -16,7 +16,7 @@ published: false
 
 Test runner 導入に至った背景に関しては、こちらの記事から確認できます。
 
-記事：[Webフロントエンドに Integration Test を導入するに至った諸々の話](https://www.notion.so/Web-Integration-Test-56dbb1453147465581fc13eed95822e4?pvs=21)
+記事：[Webフロントエンドに Integration Test を導入するに至った諸々の話](https://zenn.dev/aldagram_tech/articles/kanna-integration-test)
 
 ## Storybook のバージョン
 

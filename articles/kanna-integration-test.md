@@ -46,7 +46,7 @@ Integration Test を導入することで依存関係によるエラーなどの
 
 KANNA では E2E に [MagicPod](https://magicpod.com/)、 CSSスタイリングツールに `material-ui` を利用しているのですが、 これを v4 → v5 にするにあたって E2E が9割落ちるという自体に陥ってしまいました💦。
 
-`material-ui` が [emotion を採用したり](https://www.notion.so/Web-Integration-Test-b91975e84f1940d18fb1689ab302e200?pvs=21)して内部状態の破壊的変更が多く仕方のないことではあるのですが、これによるE2Eの修正が大変でした。
+`material-ui` が emotion を採用したりして、内部状態の破壊的変更が多く仕方のないことではあるのですが、これによるE2Eの修正が大変でした。
 
  Integration Test が十分に備わっていたらリリースブロック判定を1段階緩められるカモと考えたため、動機の１つに置きました。
 
