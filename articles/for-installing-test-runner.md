@@ -35,7 +35,7 @@ Test runner 導入に至った背景に関しては、こちらの記事から�
 "@storybook/test-runner": "^0.9.4",
 ```
 
-2023/07現在における最新バージョンであるv7 では test-runner のバージョンが `^0.10.0` になると思うので、注意です。 `@storybook/jest` は、実際のstoriesファイルの `expect` で使うのでほぼ必須になると思います。
+2023年7月で最新バージョンであるv7 では test-runner のバージョンが `^0.10.0` になると思うので、注意です。 `@storybook/jest` は、実際のstoriesファイルの `expect` で使うのでほぼ必須になると思います。
 
 | Test runner version | Storybook version |
 | --- | --- |
