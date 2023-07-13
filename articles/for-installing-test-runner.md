@@ -53,7 +53,7 @@ Test runner 導入に至った背景に関しては、こちらの記事から�
 
 ### [ハマり]パッケージ依存関係で別のspecファイルの型エラーが起きる
 
-課題：（これはプロダクト依存な部分もあるのですが）、別のspecファイルで、 `NextApiRequest` ,  `NextApiResponse` を返す部分があるのですが、そこで使われている `http-server` との return 値がエラーを吐いていました。
+_**課題**_：（これはプロダクト依存な部分もあるのですが）、別のspecファイルで、 `NextApiRequest` ,  `NextApiResponse` を返す部分があるのですが、そこで使われている `http-server` との return 値がエラーを吐いていました。
 
 ```json
 error TS2344: Type 'NextApiRequest' does not satisfy the constraint 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
@@ -63,7 +63,7 @@ error TS2344: Type 'NextApiRequest' does not satisfy the constraint 'Request<Par
 
 [Parameters mismatch Typescript definitions · Issue #245 · eugef/node-mocks-http](https://github.com/eugef/node-mocks-http/issues/245#issuecomment-926390977)
 
-解決策：specファイルの型の部分を
+_**解決策**_：specファイルの型の部分を
 
 ```tsx
 import httpMocks, { createRequest, createResponse } from 'node-mocks-http'
@@ -84,9 +84,9 @@ describe('hoge', () => {
 
 ### [工夫]pagesのstoryのみをテストしたい
 
-課題：KANNA では既にページごとの stories ファイルが存在するため、ページごとに interactions test を追加する方針にしました。しかし、Test runner の初期セットアップだと、KANNA で採用している　AtomicDesign の Atoms, Molecules, Organisms などの pages 以外の stories ファイルもテストしまうため、こちらは最初は省きたかったのです。
+_**課題**_：KANNA では既にページごとの stories ファイルが存在するため、ページごとに interactions test を追加する方針にしました。しかし、Test runner の初期セットアップだと、KANNA で採用している　AtomicDesign の Atoms, Molecules, Organisms などの pages 以外の stories ファイルもテストしまうため、こちらは最初は省きたかったのです。
 
-解決策： [test-runner-jest.config.js](https://storybook.js.org/addons/@storybook/test-runner#:~:text=shard%3D1/3-,Ejecting%20configuration,-The%20test%20runner) を利用することで、 `testMatch` オプションで pages.stories のみをテストするようにしました。この config は、 `test-runner` コマンド実行時に適用されるもので、 jest-playwright と jest の２つのオプションを受け付けます。
+_**解決策**_： [test-runner-jest.config.js](https://storybook.js.org/addons/@storybook/test-runner#:~:text=shard%3D1/3-,Ejecting%20configuration,-The%20test%20runner) を利用することで、 `testMatch` オプションで pages.stories のみをテストするようにしました。この config は、 `test-runner` コマンド実行時に適用されるもので、 jest-playwright と jest の２つのオプションを受け付けます。
 
 ```jsx
 const { getJestConfig } = require('@storybook/test-runner')
@@ -127,9 +127,13 @@ module.exports = {
 
 KANNAは現在、日本語・英語・タイ語・スペイン語をサポートしており、UI 上でも海外ユーザー用にいくつか項目を省く or 追加したりしています。例えばカナ入力は海外では省かれています。
 
-課題：日本語の場合、カナ入力を含めてユーザー登録の interactions test をしたい。日本語以外の場合、カナ入力を省いたユーザー登録をしたい。
+--
 
-最初の解決策： `hoge/interactions/ja` , `hoge/interactions/en` とディレクトリを切ってテストを書いていく。
+_**課題**_：日本語の場合、カナ入力を含めてユーザー登録の interactions test をしたい。日本語以外の場合、カナ入力を省いたユーザー登録をしたい。
+
+--
+
+_**最初の解決策**_： `hoge/interactions/ja` , `hoge/interactions/en` とディレクトリを切ってテストを書いていく。
 
 愚直に書いていくスタイルです。KANNAでは i18n を利用しており、それを各ストーリーの実行ごとに切り替えていけば良い？と思っておりました。
 
@@ -183,7 +187,9 @@ hogehoge.play = async () => {
 
 ただ、そうでない場合 interactions test のために、毎回ディレクトリを切って i18n の切り替えなどが必要になるので手間。というデメリットがあり、もっと簡単にできないかなーっと別のエンジニアと議論したりしていました。
 
-最終的な解決策：preview.tsx でグローバルに扱っている `locale context` を、各stories ファイルの play関数内で見て実行時の処理を変える。
+--
+
+_**最終的な解決策**_：preview.tsx でグローバルに扱っている `locale context` を、各stories ファイルの play関数内で見て実行時の処理を変える。
 
 Storybook では、globals というストーリがレンダリングされるビューポートと背景を制御するツールバーアドオンが実装されています。
 
