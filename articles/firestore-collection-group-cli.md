@@ -112,7 +112,8 @@ CLI を使えば、GUI でのマニュアル設定が必要ないため、複数
 
 ![image3.png](/images/firestore-collection-group-cli/image3.png)
 
-除外(単一フィールドインデックス) に関しては、以下に詳しくまとめられていますhttps://firebase.google.com/docs/firestore/query-data/index-overview?hl=ja#single-field_index_exemptions
+除外(単一フィールドインデックス) に関しては、以下に詳しくまとめられています
+https://firebase.google.com/docs/firestore/query-data/index-overview?hl=ja#single-field_index_exemptions
 
 ## ルールの制定
 
