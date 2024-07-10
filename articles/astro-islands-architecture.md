@@ -36,7 +36,7 @@ https://jasonformat.com/islands-architecture/
 
 下記の画像では、1枚のページの中に静的UIと、インタラクティブなコンポーネントが混じっていることを図示したものです。各コンポーネントが島のように独立しており、動的領域はプレースホルダー/スロットとして配置されていることが分かります。
 
-![image2.png](/images/astro-microcms/image2.png)
+![image2.png](/images/astro-islands-architecture/image2.png)
 *https://jasonformat.com/islands-architecture/ を拝借して編集*
 
 ## Islands Architectureを採用したフレームワークはいくつも存在する
@@ -51,7 +51,7 @@ https://github.com/lxsmnsyc/awesome-islands
 Astro は、上記のアーキテクチャに加え、islands に対する柔軟なサポートをしております。
 それは、React や Svelte といったフレームワークへのマルチな共存対応です。1ページ上に複数のフレームワークの共存が可能になり、任意のタイミングでハイドレーションを行えます。island は、他の island と干渉せず、常に独立して動作しお互いの状態を共有することができるため、複数のフレームワークの共存が可能だということです。下記のようなイメージです。
 
-![image4.png](/images/astro-microcms/image4.png)
+![image4.png](/images/astro-islands-architecture/image4.png)
 
 また、ハイドレーションのタイミングもコントロールできます。これは、特定のトリガー（例えば、ユーザーのスクロールやビューポートへの表示）に基づいて、必要な時にのみクライアントサイドで JavaScript をロードしてハイドレーションすることができるからです。
 
