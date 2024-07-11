@@ -21,7 +21,7 @@ published: false
 そして、私が気に入ったのが、[簡単に使える](https://docs.astro.build/ja/concepts/why-astro/#%E7%B0%A1%E5%8D%98%E3%81%AB%E4%BD%BF%E3%81%88%E3%82%8B)という部分です。
 新たなフレームワークを導入する際、導入コストが高いとそれだけで不採用になり得ますが、 Astro では `.astro` 拡張子であれば、それは HTML のスーパーセットであるため、HTML を書けることがそのまま Astro コンポーネントも書けるということになります。
 加えて、JSX、Svelte、など、他フレームワーク製のコンポーネントも `.astro` 内であれば、import して利用できるため、Astro への移行がスムーズになりやすい、というのもポイントが高いです。
-これら以外に Astro を普及させる要因として [Server First](https://docs.astro.build/ja/concepts/why-astro/#server-first) や、[Astro Islands Architecture](https://docs.astro.build/ja/concepts/islands/) 等が存在します。
+これら以外に Astro を普及させる要因として [Server First](https://docs.astro.build/ja/concepts/why-astro/#%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%83%95%E3%82%A1%E3%83%BC%E3%82%B9%E3%83%88) や、[Astro Islands Architecture](https://docs.astro.build/ja/concepts/islands/) 等が存在します。
 早速、Astro Islands Architecture を見ていきたいですが、その前に Islands Architecture そのものについて触れていこうと思います。
 
 ## Islands Architectureとは
