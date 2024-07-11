@@ -97,7 +97,7 @@ https://loige.co/migrating-from-gatsby-to-astro/
 
 こちらでは、背景として Gatsby のバージョンアップデートのコスト・Gatsby 自体の複雑性について不満があり、移行先に対してはすでにある既存の JSX 構文のサポート・モダン技術等をメリットと捉えて模索していたところ、Astro 4 がマッチしていたと話しています（最初の Astro pre 1.0.0 では挫折したとのこと）。
 記事中の、[Migration](https://loige.co/migrating-from-gatsby-to-astro/#:~:text=successfully%20this%20time!-,Migration,-Once%20I%20was) セクションでは、Gatsby にあった既存のページとコンポーネントをすべてリストアップし、1つずつ Astro に移植する中で、デザイン周りのリプレースに時間がかかったとありますが、これもテーマやカラーパレットの確立のために必要だった時間としており、Astro に不満がある内容ではありませんでした。
-なるほど。今後は、Astroの移行作業についてどんなものか、より探っていきたいと思います。
+なるほど。今後は、Astro への移行作業についてどんなものか、より探っていきたいと思います。
 
 
 ## 参考
