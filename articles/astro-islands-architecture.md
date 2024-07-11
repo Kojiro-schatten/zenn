@@ -15,16 +15,14 @@ published: false
 ## Astroとは
 
 そもそも Astro とは？ですが、[公式ページ](astro.build) では、最初に
-`The web framework for content-driven websites`
-と書いてあります。
-次に `Astro powers the world's fastest marketing sites, blogs, e-commerce websites, and more.` とあり、画像/文章/動画/音声などをメインに扱うサイト（ブログやeコマース）に対して、効率的に構築するためのWebフレームワークと言えます。
+`The web framework for content-driven websites. Astro powers the world's fastest marketing sites, blogs, e-commerce websites, and more.` とあり、画像/文章/動画/音声などをメインに扱うサイト（ブログやeコマース）に対して、効率的に構築するためのWebフレームワークと言えます。
 
 また、コアコンセプトのうち、[インテグレーションの拡張](https://astro.build/integrations/)や[別フレームワークをサポートする](https://docs.astro.build/ja/guides/framework-components/)など、カスタマイズ性も大きなメリットです。
 そして、私が気に入ったのが、[簡単に使える](https://docs.astro.build/ja/concepts/why-astro/#%E7%B0%A1%E5%8D%98%E3%81%AB%E4%BD%BF%E3%81%88%E3%82%8B)という部分です。
 新たなフレームワークを導入する際、導入コストが高いとそれだけで不採用になり得ますが、 Astro では `.astro` 拡張子であれば、それは HTML のスーパーセットであるため、HTML を書けることがそのまま Astro コンポーネントも書けるということになります。
 加えて、JSX、Svelte、など、他フレームワーク製のコンポーネントも `.astro` 内であれば、import して利用できるため、Astro への移行がスムーズになりやすい、というのもポイントが高いです。
 これら以外に Astro を普及させる要因として [Server First](https://docs.astro.build/ja/concepts/why-astro/#server-first) や、[Astro Islands Architecture](https://docs.astro.build/ja/concepts/islands/) 等が存在します。
-早速、Astro Islands Architecture を見ていきたいですが、その前に Islands Architecture そのものについてて触れていこうと思います。
+早速、Astro Islands Architecture を見ていきたいですが、その前に Islands Architecture そのものについて触れていこうと思います。
 
 ## Islands Architectureとは
 
@@ -37,7 +35,7 @@ https://jasonformat.com/islands-architecture/
 下記の画像では、1枚のページの中に静的UIと、インタラクティブなコンポーネントが混じっていることを図示したものです。各コンポーネントが島のように独立しており、動的領域はプレースホルダー/スロットとして配置されていることが分かります。
 
 ![image2.png](/images/astro-islands-architecture/image2.png)
-*https://jasonformat.com/islands-architecture/ を拝借して編集*
+*https://jasonformat.com/islands-architecture/ から引用の上、注釈を追加*
 
 ## Islands Architectureを採用したフレームワークはいくつも存在する
 私は最初、Astro と Islands Architecture がセットで言及されていることが多いために、 Astro と Islands Architecture 自体が根強く結びついていると思っていましたが、Astro がこのアーキテクチャを採用しただけで逆の関係は成り立たない、というのが理解できました。
@@ -73,7 +71,7 @@ island 化するには、 `client:*` ディレクティブを追加すれば良�
 とあり、**静的HTMLはサーバー側でレンダリングされるが、インタラクティブな機能を持たず、クライアント側でハイドレーションされる必要がないため、island とは呼べないことが分かります。** island の定義はあくまでインタラクティブなコンポーネントであることに注意です。
 
 
-## サンプルコードで見る Islands Architecture
+## サンプルコードで見るAstro Island
 最後に、コードを少し眺めて終わります。
 Astro を利用していれば `.astro` 拡張子にすることで、複数のフレームワークが混在できます。
 勿論 props を渡すことも可能です。
