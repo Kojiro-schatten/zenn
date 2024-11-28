@@ -66,8 +66,7 @@ SQL Queries が 99+ になっているので N+1 が怪しいです。
 その結果、下記のようなパフォーマンスになりました。
 
 ![4.png](/images/performance-improvement-with-datadog/4.png)
-
-24200ms → 3050ms
+*24200ms → 3050ms*
 
 改善前に比べて、大幅に改善されましたね⭐️
 
@@ -86,12 +85,8 @@ SQL Queries が 99+ になっているので N+1 が怪しいです。
 ### **改善**
 
 N+1が発生しているのは GraphQL の 特定の field 取得時であることが分かり、GraphQL::Batch を利用しました。
-
+[公式ドキュメント](https://github.com/Shopify/graphql-batch/blob/8f5b102abada9703617807cc32f68e96a7031fa2/examples/association_loader.rb)
 https://zenn.dev/aldagram_tech/articles/how-to-use-graphql-batch
-
-公式ドキュメント：
-
-https://github.com/Shopify/graphql-batch/blob/8f5b102abada9703617807cc32f68e96a7031fa2/examples/association_loader.rb
 
 イメージとしては下記のような感じです。
 
@@ -111,8 +106,7 @@ GraphQL::Batch の役割の1つとして、個々で走っているクエリを�
 これを採用することで、下記のような結果になりました。
 
 ![6.png](/images/performance-improvement-with-datadog/6.png)
-
-6130ms -> 416ms
+*6130ms -> 416ms*
 
 いい感じです！
 
