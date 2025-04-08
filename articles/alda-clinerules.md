@@ -102,8 +102,6 @@ schema.graphqlは、max_tokensに引っ掛かるため読み込まないでく�
 
 などが挙げられます。RooCline であれば、ローカルでの設定も可能なので、その案内だけを Notion に記載しました。
 
-![image.png](attachment:09870461-199b-41e8-becc-e2bb75ec79af:image.png)
-
 ## 実際の.clinerules構成と解説
 
 .clinerules の構成にあたって、[mizchi](https://zenn.dev/mizchi) さんが公開している [.clinerules](https://github.com/mizchi/ailab/blob/main/.clinerules) を大いに参考にさせていただいているため、この場で感謝を申し上げます。
