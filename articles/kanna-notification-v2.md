@@ -150,16 +150,16 @@ notification_requests
 │   │   ├── upload_documents_builder.rb # 資料アップロード通知の Builder(v2)
 │   │   └── utils.rb # builder で必要な utils
 │   └── message
-│   ├── message_container.rb # 通知メッセージコンテナ
-│   ├── mail_notification_message.rb # 通知媒体用メッセージクラス。メールテンプレート自体が変わるのと、field 数が増減するので、柔軟性を持たせている
-│   ├── kanna_notification_message.rb # 通知媒体用メッセージクラス
-│   ├── desktop_notification_message.rb # 通知媒体用メッセージクラス
-│   ├── push_notification_message.rb # 通知媒体用メッセージクラス
+│   │   ├── message_container.rb # 通知メッセージコンテナ
+│   │   ├── mail_notification_message.rb # 通知媒体用メッセージクラス。メールテンプレート自体が変わるのと、field 数が増減するので、柔軟性を持たせている
+│   │   ├── kanna_notification_message.rb # 通知媒体用メッセージクラス
+│   │   ├── desktop_notification_message.rb # 通知媒体用メッセージクラス
+│   │   ├── push_notification_message.rb # 通知媒体用メッセージクラス
 │   ├── formatters
 │   │   └── gcf_formatter.rb # gcf 経由で渡す際の formatter
 │   └── serializers
-│   ├── deserializer.rb
-│   └── serializer.rb
+│   │   ├── deserializer.rb
+│   │   └── serializer.rb
 ├── v1 系のファイル..
 ```
 
